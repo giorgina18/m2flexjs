@@ -1,7 +1,7 @@
 let canvas = document.getElementById("canvas");
 let g = canvas.getContext("2d");
 
-const game_start = 0;
+const gamestate_start = 0;
 const gamestate_ingame = 1;
 const gamestate_gameover = 2;
 
@@ -9,7 +9,7 @@ const ingamestate_start = 0;
 const ingamestate_roll = 1;
 const ingamestate_end = 0;
 
-let gameState = game_start;
+let gameState = gamestate_start;
 let inGameState = ingamestate_start;
 let boardPositionSize = 50;
 let pawnPositions = [];
@@ -81,13 +81,13 @@ function initGame() {
 function drawGameStart() {
 
     for (let i = 0; i < playerAmountButtons.length; i++) {
-         const pos = playerAmountButtons[i];
+        const pos = playerAmountButtons[i];
         g.fillStyle = "purple"
         g.fillRect(playerAmountButtons[i].x, playerAmountButtons[i].y, playerAmountButtons[i].w, playerAmountButtons[i].h)
 
         g.fillStyle = "#FFFFFF";
         g.fillText((i + 1) + "", playerAmountButtons[i].x, playerAmountButtons[i].y + 20);
-        g.drawImage(images["pawn"+i+".png"],pos.x,pos.y,pos.w,pos.h)
+        g.drawImage(images["pawn" + i + ".png"], pos.x, pos.y, pos.w, pos.h)
 
     }
 }
@@ -106,53 +106,81 @@ function drawGameOver() { }
 function draw() {
     clearCanvas();
 
-    if (gameState == game_start) { 
+    if (gameState == gamestate_start) {
         drawGameStart();
-    
+
     }
-    
+
     else if (gamestate == gamestate_ingame) {
         drawIngame();
     }
 }
 
 
-function loadImages()
-{
+function loadImages() {
     let sources = [
         "img/dice1.png", "img/dice2.png", "img/dice3.png", "img/dice4.png", "img/dice5.png", "img/dice6.png",
-        "img/pawn0.png", "img/pawn1.png", "img/pawn2.png", "img/pawn3.png", 
-        "img/snakes.png", 
-        "img/trophy.png", 
-        "img/window.png", 
+        "img/pawn0.png", "img/pawn1.png", "img/pawn2.png", "img/pawn3.png",
+        "img/snakes.png",
+        "img/trophy.png",
+        "img/window.png",
     ];
-    
+
     let scope = this;
-    
+
     let loaded = 0;
-    for (let i = 0; i < sources.length; i++)
-    {
+    for (let i = 0; i < sources.length; i++) {
         let img = new Image();
-        
-        
-        img.onload = function ()
-        {
+
+
+        img.onload = function () {
             loaded++;
-            if (loaded == sources.length)
-            {
+            if (loaded == sources.length) {
                 imagesLoaded();
             }
         };
         img.src = sources[i];
-        
-        images[ sources[i].replace("img/","")] = img;
+
+        images[sources[i].replace("img/", "")] = img;
     }
 }
 
+function canvasClicked(mouseEvent) {
 
-function imagesLoaded(){
-    initGame()
-    draw()
+    if (gameState == gamestate_start) {
+
+        let mX = mouseEvent.clientX;
+        let mY = mouseEvent.clientY;
+
+        for (let i = 0; i < playerAmountButtons.length; i++) {
+            const button = playerAmountButtons[i];
+            let hitButton = inRect(mX, mY, button);
+            if (hitButton == true) {
+
+                startGame(button.playerAmount);
+                break;
+            }
+
+        }
+
+
+    }
+}
+function startGame(playerAmount) { }
+
+function inRect(px, py, rect) {
+
+    let result = (px >= rect.x && px <= rect.x2 && py >= rect.y && py <= rect.y2)
+    return result;
+}
+
+function imagesLoaded() {
+    initGame();
+
+    canvas.addEventListener("click", (e) => { canvasClicked(e) });
+
+
+    draw();
 }
 
 loadImages();
