@@ -18,6 +18,8 @@ let playerAmountButtons = [];
 let uiwindow = createRect(600, 200, 300, 300)
 let images = {};
 
+let lastRoll = -1;
+
 
 
 function createRect(x, y, w, h) {
@@ -48,17 +50,17 @@ function createBoardPositions() {
         if (path[i] == 1)//gaan naar rechts
         {
             //bedenk hier wat je met de x moet doen
-            x += boardPositionSize+5
+            x += boardPositionSize + 5
         }
         else if (path[i] == 3)//gaan naar links
         {
             // bedenk hier wat je met de x moet doen
-            x -= boardPositionSize+5
+            x -= boardPositionSize + 5
         }
         else if (path[i] == 0)//gaan hier naar boven
         {
             //bedenk hier wat je met de y moet doen
-            y -= boardPositionSize+5
+            y -= boardPositionSize + 5
         }
         boardPositions.push(createRect(x, y, boardPositionSize, boardPositionSize));
     }
@@ -101,9 +103,9 @@ function drawIngame() {
         g.fillText((i + 1) + "", pos.x, pos.y + 20);
     }
 
-    
-        let snakeImage = images["snakes.png"];
-        g.drawImage(snakeImage,0, 55, 600,600);
+
+    let snakeImage = images["snakes.png"];
+    g.drawImage(snakeImage, 0, 55, 600, 600);
 
     for (let i = 0; i < pawnPositions.length; i++) {
 
@@ -113,24 +115,24 @@ function drawIngame() {
 
         let boardpos = boardPositions[boardI];
         let pawnSize = boardPositionSize / 2;
-        
+
 
 
         if (i == 0) {
             g.drawImage(images["pawn" + i + ".png"], boardpos.x, boardpos.y, pawnSize, pawnSize)
-        }    
+        }
 
         else if (i == 1) {
             g.drawImage(images["pawn" + i + ".png"], boardpos.x + pawnSize, boardpos.y, pawnSize, pawnSize)
-        }    
+        }
         else if (i == 2) {
             g.drawImage(images["pawn" + i + ".png"], boardpos.x, boardpos.y + pawnSize, pawnSize, pawnSize)
-        }    
+        }
         else if (i == 3) {
             g.drawImage(images["pawn" + i + ".png"], boardpos.x + pawnSize, boardpos.y + pawnSize, pawnSize, pawnSize)
-        }    
-    }    
-    
+        }
+    }
+
 
 }
 function drawGameOver() { }
@@ -145,7 +147,33 @@ function draw() {
 
     else if (gameState == gamestate_ingame) {
         drawIngame();
+        drawUI()
     }
+ }  
+
+
+ function startRoll(){
+    ingameState = ingamestate_roll
+    lastRoll = -1
+    draw();
+    setTimeout(endRoll,500)
+ }
+
+
+ function drawUI(){
+ 
+ if(ingameState == ingamestate_roll){
+
+        if(lastRoll ==-1){
+            g.fillText("rollen...." ,20,20)
+        }else{
+            g.drawImage(images["dice"+lastRoll+".png"])
+        }
+    }
+}
+
+function endRoll(){
+    lastRoll = 
 }
 
 
@@ -192,12 +220,19 @@ function canvasClicked(mouseEvent) {
                 startGame(button.playerAmount);
                 break;
             }
+        }
+    }
+    else if (gameState == gamestate_ingame) {
+
+        if (ingameState == ingamestate_start) {
+            startRoll();
 
         }
-
-
     }
 }
+
+
+
 
 function createPawn(playerI) {
 
