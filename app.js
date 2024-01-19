@@ -10,7 +10,7 @@ const ingamestate_roll = 1;
 const ingamestate_end = 0;
 
 let gameState = gamestate_start;
-let inGameState = ingamestate_start;
+let ingameState = ingamestate_start;
 let boardPositionSize = 50;
 let pawnPositions = [];
 let boardPositions = [];
@@ -167,13 +167,20 @@ function draw() {
         if(lastRoll ==-1){
             g.fillText("rollen...." ,20,20)
         }else{
-            g.drawImage(images["dice"+lastRoll+".png"])
+            g.drawImage(images["dice"+lastRoll+".png"], 5,5,50,50)
         }
     }
+
+    if(ingamestate_start == ingameState){
+        g.drawImage(images["pawn" + playerTurn + ".png"],5,5,50,50)
+    }
+
 }
 
 function endRoll(){
-    lastRoll = 
+    lastRoll = Math.floor(Math.random() * 6)+1;
+    draw();
+    ingameState = ingamestate_end
 }
 
 
