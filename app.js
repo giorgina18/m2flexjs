@@ -48,17 +48,17 @@ function createBoardPositions() {
         if (path[i] == 1)//gaan naar rechts
         {
             //bedenk hier wat je met de x moet doen
-            x += boardPositionSize
+            x += boardPositionSize+5
         }
         else if (path[i] == 3)//gaan naar links
         {
             // bedenk hier wat je met de x moet doen
-            x -= boardPositionSize
+            x -= boardPositionSize+5
         }
         else if (path[i] == 0)//gaan hier naar boven
         {
             //bedenk hier wat je met de y moet doen
-            y -= boardPositionSize
+            y -= boardPositionSize+5
         }
         boardPositions.push(createRect(x, y, boardPositionSize, boardPositionSize));
     }
@@ -100,6 +100,38 @@ function drawIngame() {
         g.fillStyle = "#FFFFFF";
         g.fillText((i + 1) + "", pos.x, pos.y + 20);
     }
+
+    
+        let snakeImage = images["snakes.png"];
+        g.drawImage(snakeImage,0, 55, 600,600);
+
+    for (let i = 0; i < pawnPositions.length; i++) {
+
+
+        let pos = pawnPositions[i];
+        let boardI = pos.boardI;
+
+        let boardpos = boardPositions[boardI];
+        let pawnSize = boardPositionSize / 2;
+        
+
+
+        if (i == 0) {
+            g.drawImage(images["pawn" + i + ".png"], boardpos.x, boardpos.y, pawnSize, pawnSize)
+        }    
+
+        else if (i == 1) {
+            g.drawImage(images["pawn" + i + ".png"], boardpos.x + pawnSize, boardpos.y, pawnSize, pawnSize)
+        }    
+        else if (i == 2) {
+            g.drawImage(images["pawn" + i + ".png"], boardpos.x, boardpos.y + pawnSize, pawnSize, pawnSize)
+        }    
+        else if (i == 3) {
+            g.drawImage(images["pawn" + i + ".png"], boardpos.x + pawnSize, boardpos.y + pawnSize, pawnSize, pawnSize)
+        }    
+    }    
+    
+
 }
 function drawGameOver() { }
 
@@ -111,7 +143,7 @@ function draw() {
 
     }
 
-    else if (gamestate == gamestate_ingame) {
+    else if (gameState == gamestate_ingame) {
         drawIngame();
     }
 }
@@ -166,7 +198,28 @@ function canvasClicked(mouseEvent) {
 
     }
 }
-function startGame(playerAmount) { }
+
+function createPawn(playerI) {
+
+    return { board: 0, playerI: playerI };
+}
+
+
+function startGame(playerAmount) {
+
+    gameState = gamestate_ingame;
+    inGameState = ingamestate_start;
+    pawnPositions = [];
+    playerTurn = 0;
+    winner = -1;
+    console.log("playerAmount" + playerAmount);
+    for (let i = 0; i < playerAmount; i++) {
+        let poppetje = createPawn(i)
+
+        pawnPositions.push(poppetje)
+    }
+    draw();
+}
 
 function inRect(px, py, rect) {
 
@@ -182,5 +235,10 @@ function imagesLoaded() {
 
     draw();
 }
+
+function createPawn(playerI) {
+    return { boardI: 0, playerI: playerI }
+}
+
 
 loadImages();
